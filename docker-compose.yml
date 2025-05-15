@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: edrms_user
+      POSTGRES_PASSWORD: Oirrms!!22
+      POSTGRES_DB: edrms
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=edrms_user
+      - DB_PASSWORD=edrms_password
+      - DB_NAME=edrms
+    depends_on:
+      - postgres
+
+  client:
+    build: ./client
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
